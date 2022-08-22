@@ -1,7 +1,7 @@
 {
-  "name": "vscode-ava",
-  "displayName": "AVA for VSCode",
-  "description": "Let AVA help you during your chart development!",
+  "name": "vscode-antv",
+  "displayName": "AntV for VSCode",
+  "description": "Enjoy your chart development with AntV!",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.70.0"
@@ -10,16 +10,62 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-ava.helloWorld"
+    "onCommand:vscode-antv.start"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-ava.helloWorld",
-        "title": "Hello World"
+        "command": "vscode-antv.start",
+        "title": "Start AntV for VSCode"
       }
-    ]
+    ],
+    "languages": [
+      {
+        "id": "js",
+        "extensions": [
+          ".js"
+        ]
+      },
+      {
+        "id": "ts",
+        "extensions": [
+          ".ts"
+        ]
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "vscode-antv.start",
+          "when": "resourceLangId == js"
+        },
+        {
+          "command": "vscode-antv.start",
+          "when": "resourceLangId == ts"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "vscode-antv.start",
+          "when": "resourceLangId == js"
+        },
+        {
+          "command": "vscode-antv.start",
+          "when": "resourceLangId == ts"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "vscode-antv.start",
+          "when": "resourceLangId == js"
+        },
+        {
+          "command": "vscode-antv.start",
+          "when": "resourceLangId == ts"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -61,5 +107,11 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "dependencies": {
+    "@babel/generator": "^7.18.12",
+    "@babel/parser": "^7.18.11",
+    "@babel/traverse": "^7.18.11",
+    "@babel/types": "^7.18.10"
   }
 }

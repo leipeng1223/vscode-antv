@@ -1,5 +1,5 @@
 # vscode-ava
-🌟 Let AVA help you during your chart development!
+🌟 Enjoy your chart development with AntV!
 
 # vscode-ava README
 
