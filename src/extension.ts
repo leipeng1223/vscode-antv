@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable import/no-extraneous-dependencies */
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as path from 'path';
 
 import * as vscode from 'vscode';
@@ -10,19 +8,37 @@ import * as parser from '@babel/parser';
 import traverse from '@babel/traverse';
 import * as t from '@babel/types';
 
-// import traverse from '@babel/traverse';
+function getWebviewContent() {
+  // 返回webview的html内容
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+      HTML contexts
+  </body>
+  </html>`;
+}
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+// 插件激活时调用
 export function activate(context: vscode.ExtensionContext) {
   const disposable = vscode.commands.registerCommand('vscode-antv.start', (fileUri: vscode.Uri) => {
-    // The code you place here will be executed every time your command is executed
-    // Display a message box to the user
+    // 获取激活插件的文档的Uri
     const uriFsPath = fileUri.fsPath;
 
     vscode.window.showInformationMessage('AntV for VSCode started!');
 
-    vscode.window.createWebviewPanel('antv', `AntV: ${path.basename(uriFsPath)}`, vscode.ViewColumn.Beside);
+    // 创建webview
+    const panel = vscode.window.createWebviewPanel(
+      'antv',
+      `AntV: ${path.basename(uriFsPath)}`,
+      vscode.ViewColumn.Beside
+    );
+
+    // 设置webview的tab icon
+    panel.iconPath = vscode.Uri.file(path.join(context.extensionPath, 'src', 'icons', 'icon-small.png'));
 
     vscode.workspace.fs.readFile(fileUri).then((uint8array) => {
       // 获取当前文件的纯文本
@@ -30,6 +46,7 @@ export function activate(context: vscode.ExtensionContext) {
       // 将纯文本转换为AST
       const ast = parser.parse(rawText);
       let dataBinding;
+      // 遍历AST并操作节点（TODO）
       traverse(ast, {
         enter(path) {
           if (t.isIdentifier(path.node) && path.scope.hasBinding('data')) {
@@ -40,10 +57,12 @@ export function activate(context: vscode.ExtensionContext) {
       });
       console.log(ast);
     });
-  });
 
+    // webview获取html
+    panel.webview.html = getWebviewContent();
+  });
   context.subscriptions.push(disposable);
 }
 
-// this method is called when your extension is deactivated
+// 插件关闭时调用
 export function deactivate() {}
